@@ -1,6 +1,9 @@
 package formula1;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class RaceStatus {
@@ -10,29 +13,49 @@ public class RaceStatus {
 	private boolean finish = false;
 	
 	public synchronized void lap(Pilot pilot) {
-		System.out.println("Pilot: [" + pilot.getName() + ", laps=" + pilot.getLaps() + "]");
-		if (pilot.getLaps() == 0) {
+		if (pilot.getLaps()==0) {
 			finish = true;
 		}
+		System.out.println("Pilot: [" + pilot.getName() + ", laps=" + pilot.getLaps() + "]");
+		pilot.setLaps(pilot.getLaps()-1);
 		if (isFinished()) {
 			score.add(pilot);
 		}
+		
+//		if (pilot.getLaps() == 0) {
+//			finish = true;
+//		} else {
+//			pilot.setLaps(pilot.getLaps()-1);
+//			System.out.println("Pilot: [" + pilot.getName() + ", laps=" + pilot.getLaps() + "]");
+//		}
+//		if (isFinished()) {
+//			score.add(pilot);
+//		}
 	}
 	
-	public boolean isFinished() {
+	public synchronized boolean isFinished() {
 		return finish;
 	}
 
 	@Override
 	public String toString() {
 		String result = "";
-		int pos = 0;
+		int pos = 1;
 		result += "[RACE RESULTS]";
 		result += System.lineSeparator();
 		for(Pilot p : score) {
-			result += pos + ". " +
+			result += pos + ". " + p.getName() + " | " + p.getTime() + "s" ;
+			result += System.lineSeparator();
+			pos++;
 		}
 		return result;
+	}
+	
+	private String timeFormat (int time) {
+		int hores;
+		int minuts;
+		int segons;
+		return null;
 	}
 	
 	
