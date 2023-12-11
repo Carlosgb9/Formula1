@@ -3,6 +3,7 @@ package formula1;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -21,7 +22,6 @@ public class RaceStatus {
 		if (isFinished()) {
 			score.add(pilot);
 		}
-		
 //		if (pilot.getLaps() == 0) {
 //			finish = true;
 //		} else {
@@ -35,6 +35,10 @@ public class RaceStatus {
 	
 	public synchronized boolean isFinished() {
 		return finish;
+	}
+	
+	private void ordenar() {
+		//Collections.sort(score);
 	}
 
 	@Override
