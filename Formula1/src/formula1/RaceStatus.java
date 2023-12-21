@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -14,54 +15,58 @@ public class RaceStatus {
 	private boolean finish = false;
 	
 	public synchronized void lap(Pilot pilot) {
-		if (pilot.getLaps()==0) {
+		pilot.setLaps(pilot.getLaps()-1);
+		if (pilot.getLaps() == 0) {
 			finish = true;
 		}
 		System.out.println("Pilot: [" + pilot.getName() + ", laps=" + pilot.getLaps() + "]");
-		pilot.setLaps(pilot.getLaps()-1);
 		if (isFinished()) {
 			score.add(pilot);
 		}
-//		if (pilot.getLaps() == 0) {
+//		pilot.setLaps(pilot.getLaps()-1);
+//		if (pilot.getLaps()==0) {
 //			finish = true;
-//		} else {
-//			pilot.setLaps(pilot.getLaps()-1);
-//			System.out.println("Pilot: [" + pilot.getName() + ", laps=" + pilot.getLaps() + "]");
 //		}
+//		System.out.println("Pilot: [" + pilot.getName() + ", laps=" + pilot.getLaps() + "]");
 //		if (isFinished()) {
 //			score.add(pilot);
 //		}
+
 	}
 	
 	public synchronized boolean isFinished() {
 		return finish;
 	}
-	
-	private void ordenar() {
-		//Collections.sort(score);
-	}
 
 	@Override
 	public String toString() {
-		String result = "";
 		int pos = 1;
+		String result = "";
+		ordenar();
 		result += "[RACE RESULTS]";
 		result += System.lineSeparator();
-		for(Pilot p : score) {
-			result += pos + ". " + p.getName() + " | " + p.getTime() + "s" ;
-			result += System.lineSeparator();
-			pos++;
-		}
+			for(Pilot p : score) {
+				if (p.getLaps()==0) {
+					result += pos + ". " + p.getName() + " | " + timeFormat(p.getTime()) + "s" ;
+				} else {
+					result += pos + ". " +p.getName() + " | +" + p.getLaps() + " lap";
+				}
+				result += System.lineSeparator();
+				pos++;
+			}
 		return result;
 	}
 	
 	private String timeFormat (int time) {
-		int hores;
-		int minuts;
-		int segons;
-		return null;
+		int horas = time / 3600;
+        int minutos = (time % 3600) / 60;
+        int segundosRestantes = time % 60;
+
+        return String.format("%02d:%02d:%02d", horas, minutos, segundosRestantes);
 	}
 	
-	
-	
+	private void ordenar() {
+			Comparator<Pilot> comparador = Comparator.comparingInt(Pilot::getLaps).thenComparingInt(Pilot::getTime);
+			Collections.sort(score, comparador);
+	}	
 }
