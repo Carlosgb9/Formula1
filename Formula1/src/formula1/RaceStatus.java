@@ -19,19 +19,13 @@ public class RaceStatus {
 		if (pilot.getLaps() == 0) {
 			finish = true;
 		}
-		System.out.println("Pilot: [" + pilot.getName() + ", laps=" + pilot.getLaps() + "]");
+		if (pilot.getFuelTank()<5) {
+			pilot.setOutput(pilot.getOutput() + "need refueling. Fuel=" + pilot.getFuelTank());
+		}
+		System.out.println(pilot.getOutput());
 		if (isFinished()) {
 			score.add(pilot);
 		}
-//		pilot.setLaps(pilot.getLaps()-1);
-//		if (pilot.getLaps()==0) {
-//			finish = true;
-//		}
-//		System.out.println("Pilot: [" + pilot.getName() + ", laps=" + pilot.getLaps() + "]");
-//		if (isFinished()) {
-//			score.add(pilot);
-//		}
-
 	}
 	
 	public synchronized boolean isFinished() {

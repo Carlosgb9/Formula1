@@ -5,13 +5,20 @@ import java.util.List;
 public class Team {
 	private String name;
 	private Box box;
+	private Thread boxThread;
 	private List<Pilot> pilots;
 	
-	public Team(String name, List<Pilot> pilots) {
+	public Team(String name, List<Pilot> pilots, RaceStatus rs) throws InterruptedException {
 		super();
 		this.name = name;
 		this.pilots = pilots;
+		box = new Box(rs);
+		boxThread = new Thread(box);
+		boxThread.setName("Box" + name);
+		boxThread.start();
+		System.out.println("Box (" + name + ") started!");
 	}
+	
 	
 	public String getName() {
 		return name;

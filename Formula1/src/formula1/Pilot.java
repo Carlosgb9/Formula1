@@ -12,6 +12,7 @@ public class Pilot implements Runnable {
 	private RaceStatus rs;
 	private Team team;
 	private int fuelTank = MAX_TANK;
+	private String output;
 	
 	public Pilot(String name, int laps, RaceStatus rs) {
 		super();
@@ -57,17 +58,30 @@ public class Pilot implements Runnable {
 	public void setTeam(Team team) {
 		this.team = team;
 	}
+	public int getFuelTank() {
+		return fuelTank;
+	}
+	public void setFuelTank(int fuelTank) {
+		this.fuelTank = fuelTank;
+	}
+	public String getOutput() {
+		return output;
+	}
+	public void setOutput(String output) {
+		this.output = output;
+	}
 
 	@Override
 	public void run() {
 		while (!rs.isFinished()) {
 			try {
+				output = "Pilot: [" + name + "(" + team.getName() +") laps=" + laps + "fuel=" + fuelTank + "] ";
 				sleepTime = (int) (Math.random() * 20) + 80; // Tenim en compte que una volta dura de mitja 1 minut y 30 segons (90s) i afegim una variable aleatoria de 3 mls. Multipliquem per 1000 per obtenir el temps en segons i afegir-lo cada volta
 				time += sleepTime;
 				Thread.sleep(sleepTime);
 				fuelTank--;
 				if (fuelTank<=5) {
-					
+					setPilotIn();
 				}
 				rs.lap(this);
 			}catch(InterruptedException e) {	
@@ -75,48 +89,39 @@ public class Pilot implements Runnable {
 		}
 	}
 	
-//	public void run() {
-//		while (clientes > 0) {
-//			// Esperar un cliente
-//			waitClient();
-//
-//			// Tomar nota (generar comanda)
-//			String order = getOrder();
-//
-//			// Poner la comanda en el panel
-//			board.enqueueOrder(order);
-//			clientes--;
-//		}
-//		board.enqueueOrder(Pizzeria.END_OF_DUTY);
-//		System.out.println("Waiter finished");
-//	}
-//	
-//	
-//	
-//	
-//	public synchronized void enqueueOrder(String order) {
-//		waitNotFull();
-//		orders.offer(order);
-//		System.out.println("Orders \"" + order + "\" enqueued. Queue contains " + Arrays.toString(orders.toArray()));
-//
-//		// Notificar a la cocina
-//		notify();
-//	}
-//	
-//	private void waitNotFull() {
+	private synchronized void setPilotIn() throws InterruptedException {
+		if (team.getBox().isFree()) {
+			System.out.println(output +  " getting into the box");
+			team.getBox().setPilotInBox(this);
+			notify();
+			System.out.println("El pilot ha entrat al box");
+			while (fuelTank != MAX_TANK) {
+				wait();
+			}
+		} else {
+			System.out.println(output + " BOX BUSY!!");
+			return;
+		}
+	}
+	
+//	public synchronized void setPilotOut() {
 //		try {
-//			while (isFull()) {
-//				System.out.println("Waiter waiting... ");
+//			while (isFree()) {
+//				System.out.println("Box is free");
 //				wait();
 //			}
 //		} catch (InterruptedException e) {
 //		}
+//		pilotInBox.refuel();
+//		System.out.println("\tBOX(" + pilotInBox.getTeam().getName()+"): "+ pilotInBox.getOutput()+" refuelled");
+//		pilotInBox = null;
+//		System.out.println("El pilot ha surtit del box");
+//		notify();
 //	}
-	
-	
-	
+
 	public void refuel() {
 		fuelTank = MAX_TANK;
+		output += "Pilot: [" + name + "(" + team +") laps=" + laps + "fuel=" + fuelTank + "] ";
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
