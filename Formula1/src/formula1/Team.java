@@ -12,7 +12,7 @@ public class Team {
 		super();
 		this.name = name;
 		this.pilots = pilots;
-		box = new Box(rs);
+		box = new Box(rs, this);
 		boxThread = new Thread(box);
 		boxThread.setName("Box" + name);
 		boxThread.start();

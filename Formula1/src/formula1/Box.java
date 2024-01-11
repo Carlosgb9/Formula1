@@ -3,10 +3,12 @@ package formula1;
 public class Box implements Runnable {
 	private RaceStatus rs;
 	private Pilot pilotInBox;
+	private Team team;
 
-	public Box(RaceStatus rs) {
+	public Box(RaceStatus rs, Team team) {
 		super();
 		this.rs = rs;
+		this.team = team;
 	}
 
 	public RaceStatus getRc() {
@@ -22,8 +24,9 @@ public class Box implements Runnable {
 	}
 
 	public synchronized void setPilotInBox(Pilot pilotInBox) {
-		System.out
-				.println("\tBOX(" + pilotInBox.getTeam().getName() + "): " + pilotInBox.getOutput() + " is in his box");
+		if (pilotInBox!=null) {	
+			System.out.println("\tBOX(" + pilotInBox.getTeam().getName() + "): " + pilotInBox.getOutput() + " is in his box");
+		}
 		this.pilotInBox = pilotInBox;
 	}
 
@@ -46,7 +49,7 @@ public class Box implements Runnable {
 		while (!isFree()) {
 			wait();
 		}
-		System.out.println("El pilot ha surtit del box");
+		System.out.println("El pilot ha surtit del box" + team.getName());
 	}
 
 	@Override

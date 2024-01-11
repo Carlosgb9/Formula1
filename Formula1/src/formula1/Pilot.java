@@ -1,5 +1,7 @@
 package formula1;
 
+import javax.sql.rowset.spi.SyncResolver;
+
 public class Pilot implements Runnable {
 	private static final int MAX_TANK = 25;
 	private String name;
@@ -89,7 +91,7 @@ public class Pilot implements Runnable {
 		while (!rs.isFinished() && laps > 0) {
 			try {
 				output = "Pilot: [" + name + "(" + team.getName() + ") laps=" + laps + "fuel=" + fuelTank + "] ";
-				sleepTime = (int) (Math.random() * 20) + 80; // Tenim en compte que una volta dura de mitja 1 minut y 30
+				sleepTime = (int) (Math.random() * 10) + 20; // Tenim en compte que una volta dura de mitja 1 minut y 30
 																// segons (90s) i afegim una variable aleatoria de 3
 																// mls. Multipliquem per 1000 per obtenir el temps en
 				laps--; // segons i afegir-lo cada volta
@@ -109,28 +111,33 @@ public class Pilot implements Runnable {
 	private void setPilotIn() throws InterruptedException {
 		synchronized (team.getBox()) {
 			if (team.getBox().isFree()) {
-				onBox = true;
 				System.out.println(output + " getting into the box");
 				team.getBox().setPilotInBox(this);
-				team.getBox().notify();
-				System.out.println("El pilot ha entrat al box");
-				while (fuelTank != MAX_TANK) {
-					team.getBox().wait();
-				}
-				team.getBox().setPilotInBox(null);
-				team.getBox().notify();
+				onBox = true;
 			} else {
 				System.out.println(output + " BOX BUSY!!");
 				return;
 			}
 		}
+		if (onBox) {
+			synchronized (team.getBox()){ 
+				team.getBox().notify();
+				System.out.println("El pilot ha entrat al box" + output);
+				while (fuelTank != MAX_TANK) {
+					team.getBox().wait();
+				}
+				team.getBox().setPilotInBox(null);
+				team.getBox().notify();
+			}
+			onBox = false;
+		}
 	}
 
 	public void refuel() {
 		fuelTank = MAX_TANK;
-		output += "Pilot: [" + name + "(" + team + ") laps=" + laps + "fuel=" + fuelTank + "] ";
+		output = "Pilot: [" + name + "(" + team.getName() + ") laps=" + laps + "fuel=" + fuelTank + "] ";
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(50);
 		} catch (InterruptedException e) {
 		}
 	}

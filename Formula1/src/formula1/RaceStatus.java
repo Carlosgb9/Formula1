@@ -15,7 +15,7 @@ public class RaceStatus {
 		if (pilot.getLaps() == 0) {
 			finish = true;
 		}
-		if (pilot.getFuelTank() < 5) {
+		if (pilot.getFuelTank() <= 5) {
 			pilot.setOutput(pilot.getOutput() + "need refueling. Fuel=" + pilot.getFuelTank());
 		}
 		System.out.println(pilot.getOutput());
@@ -37,7 +37,7 @@ public class RaceStatus {
 		result += System.lineSeparator();
 		for (Pilot p : score) {
 			if (p.getLaps() == 0) {
-				result += pos + ". " + p.getName() + " | " + timeFormat(p.getTime()) + "s";
+				result += pos + ". " + p.getName() + " | " + timeFormat(p.getTime()*4) + "s";
 			} else {
 				result += pos + ". " + p.getName() + " | +" + p.getLaps() + " lap";
 			}
