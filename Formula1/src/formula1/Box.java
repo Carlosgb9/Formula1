@@ -24,8 +24,9 @@ public class Box implements Runnable {
 	}
 
 	public synchronized void setPilotInBox(Pilot pilotInBox) {
-		if (pilotInBox!=null) {	
-			System.out.println("\tBOX(" + pilotInBox.getTeam().getName() + "): " + pilotInBox.getOutput() + " is in his box");
+		if (pilotInBox != null) {
+			System.out.println(
+					"\tBOX(" + pilotInBox.getTeam().getName() + "): " + pilotInBox.getOutput() + " is in his box");
 		}
 		this.pilotInBox = pilotInBox;
 	}
@@ -38,18 +39,26 @@ public class Box implements Runnable {
 		}
 	}
 
-	public synchronized void setPilotOut() throws InterruptedException {
-		while (isFree()) {
-			System.out.println("Box is free");
-			wait();
+	public void setPilotOut() throws InterruptedException {
+		synchronized (this) {
+			while (isFree()) {
+				System.out.println("Box is free");
+				wait();
+			}
 		}
-		pilotInBox.refuel();
-		System.out.println("\tBOX(" + pilotInBox.getTeam().getName() + "): " + pilotInBox.getOutput() + " refuelled");
-		notify();
-		while (!isFree()) {
-			wait();
+
+		synchronized (pilotInBox) {
+			pilotInBox.refuel();
+			System.out
+					.println("\tBOX(" + pilotInBox.getTeam().getName() + "): " + pilotInBox.getOutput() + " refuelled");
+			notify();
 		}
-		System.out.println("El pilot ha surtit del box" + team.getName());
+		synchronized (this) {
+			while (!isFree()) {
+				wait();
+			}
+			System.out.println("El pilot ha surtit del box" + team.getName());
+		}
 	}
 
 	@Override

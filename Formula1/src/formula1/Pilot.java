@@ -1,7 +1,5 @@
 package formula1;
 
-import javax.sql.rowset.spi.SyncResolver;
-
 public class Pilot implements Runnable {
 	private static final int MAX_TANK = 25;
 	private String name;
@@ -113,6 +111,7 @@ public class Pilot implements Runnable {
 			if (team.getBox().isFree()) {
 				System.out.println(output + " getting into the box");
 				team.getBox().setPilotInBox(this);
+				team.getBox().notify();
 				onBox = true;
 			} else {
 				System.out.println(output + " BOX BUSY!!");
@@ -120,16 +119,17 @@ public class Pilot implements Runnable {
 			}
 		}
 		if (onBox) {
-			synchronized (team.getBox()){ 
-				team.getBox().notify();
+			synchronized (getName()) {
 				System.out.println("El pilot ha entrat al box" + output);
 				while (fuelTank != MAX_TANK) {
-					team.getBox().wait();
+					wait();
 				}
-				team.getBox().setPilotInBox(null);
-				team.getBox().notify();
 			}
 			onBox = false;
+		}
+		synchronized (team.getBox()) {
+			team.getBox().setPilotInBox(null);
+			team.getBox().notify();
 		}
 	}
 
