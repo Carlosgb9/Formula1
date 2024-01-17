@@ -25,7 +25,7 @@ public class Box implements Runnable {
 
 	public synchronized void setPilotInBox(Pilot pilotInBox) {
 		if (pilotInBox != null) {
-			System.out.println(
+			System.out.println(team.getColor() +
 					"\tBOX(" + pilotInBox.getTeam().getName() + "): " + pilotInBox.getOutput() + " is in his box");
 		}
 		this.pilotInBox = pilotInBox;
@@ -47,17 +47,17 @@ public class Box implements Runnable {
 			}
 		}
 
-		synchronized (pilotInBox) {
+		synchronized (pilotInBox.getName()) {
 			pilotInBox.refuel();
 			System.out
-					.println("\tBOX(" + pilotInBox.getTeam().getName() + "): " + pilotInBox.getOutput() + " refuelled");
-			notify();
+					.println(team.getColor() + " \tBOX(" + pilotInBox.getTeam().getName() + "): " + pilotInBox.getOutput() + " refuelled");
+			pilotInBox.getName().notify();
 		}
 		synchronized (this) {
 			while (!isFree()) {
 				wait();
 			}
-			System.out.println("El pilot ha surtit del box" + team.getName());
+			System.out.println( team.getColor() + "El pilot ha surtit del box" + team.getName());
 		}
 	}
 

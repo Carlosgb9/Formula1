@@ -88,15 +88,13 @@ public class Pilot implements Runnable {
 	public void run() {
 		while (!rs.isFinished() && laps > 0) {
 			try {
-				output = "Pilot: [" + name + "(" + team.getName() + ") laps=" + laps + "fuel=" + fuelTank + "] ";
-				sleepTime = (int) (Math.random() * 10) + 20; // Tenim en compte que una volta dura de mitja 1 minut y 30
-																// segons (90s) i afegim una variable aleatoria de 3
-																// mls. Multipliquem per 1000 per obtenir el temps en
-				laps--; // segons i afegir-lo cada volta
+				output = team.getColor() + "Pilot: [" + name + "(" + team.getName() + ") laps=" + laps + "fuel=" + fuelTank + "] ";
+				sleepTime = (int) (Math.random() * 5) + 20; 
+				laps--;
 				time += sleepTime;
 				Thread.sleep(sleepTime);
 				fuelTank--;
-				output = "Pilot: [" + name + "(" + team.getName() + ") laps=" + laps + "fuel=" + fuelTank + "] ";
+				output = team.getColor() + "Pilot: [" + name + "(" + team.getName() + ") laps=" + laps + "fuel=" + fuelTank + "] ";
 				if (fuelTank <= 5) {
 					setPilotIn();
 				}
@@ -122,7 +120,7 @@ public class Pilot implements Runnable {
 			synchronized (getName()) {
 				System.out.println("El pilot ha entrat al box" + output);
 				while (fuelTank != MAX_TANK) {
-					wait();
+					getName().wait();
 				}
 			}
 			onBox = false;
@@ -135,7 +133,7 @@ public class Pilot implements Runnable {
 
 	public void refuel() {
 		fuelTank = MAX_TANK;
-		output = "Pilot: [" + name + "(" + team.getName() + ") laps=" + laps + "fuel=" + fuelTank + "] ";
+		output = team.getColor() + "Pilot: [" + name + "(" + team.getName() + ") laps=" + laps + "fuel=" + fuelTank + "] ";
 		try {
 			Thread.sleep(50);
 		} catch (InterruptedException e) {

@@ -31,7 +31,7 @@ public class RaceStatus {
 	@Override
 	public String toString() {
 		int pos = 1;
-		String result = "";
+		String result = "\u001B[0m";
 		ordenar();
 		result += "[RACE RESULTS]";
 		result += System.lineSeparator();

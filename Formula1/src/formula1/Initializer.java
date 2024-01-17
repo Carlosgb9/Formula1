@@ -22,6 +22,7 @@ public class Initializer {
 	public Team[] teamInit(Pilot[] pilots, RaceStatus rs) throws InterruptedException {
 
 		String[] nomEquips = { "Aston Martin", "Red Bull", "Ferrari" };
+		String[] colorEquips = { "\u001B[32m", "\u001B[34m", "\u001B[31m"};
 
 		List<Pilot> pilotsEquip = new ArrayList<Pilot>();
 
@@ -31,7 +32,7 @@ public class Initializer {
 			pilotsEquip.add(pilots[i]);
 			if (i % 2 != 0) {
 				int j = (i - 1) / 2;
-				teams[j] = new Team(nomEquips[j], pilotsEquip, rs);
+				teams[j] = new Team(nomEquips[j], pilotsEquip, rs, colorEquips[j]);
 				pilots[i].setTeam(teams[j]);
 				pilots[i - 1].setTeam(teams[j]);
 				pilotsEquip.clear();
