@@ -27,6 +27,7 @@ public class RaceStatus {
 	public synchronized boolean isFinished() {
 		return finish;
 	}
+	
 
 	@Override
 	public String toString() {

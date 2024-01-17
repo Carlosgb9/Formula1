@@ -39,11 +39,17 @@ public class Box implements Runnable {
 		}
 	}
 
-	public void setPilotOut() throws InterruptedException {
+	public void setPilotOut(){
 		synchronized (this) {
-			while (isFree()) {
-				System.out.println("Box is free");
-				wait();
+			try {
+				while (isFree()) {
+					System.out.println("Box is free");
+					wait();
+				}
+			}
+			catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 
@@ -54,8 +60,13 @@ public class Box implements Runnable {
 			pilotInBox.getName().notify();
 		}
 		synchronized (this) {
-			while (!isFree()) {
-				wait();
+			try {
+				while (!isFree()) {
+					wait();
+				}
+			}catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			System.out.println( team.getColor() + "El pilot ha surtit del box" + team.getName());
 		}
@@ -64,12 +75,7 @@ public class Box implements Runnable {
 	@Override
 	public void run() {
 		while (true) {
-			try {
-				setPilotOut();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			setPilotOut();
 			if (rs.isFinished()) {
 				break;
 			}

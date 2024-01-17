@@ -102,6 +102,9 @@ public class Pilot implements Runnable {
 			} catch (InterruptedException e) {
 			}
 		}
+		synchronized (team.getBox()) {
+			team.getBox().notify();
+		}
 	}
 
 	private void setPilotIn() throws InterruptedException {
