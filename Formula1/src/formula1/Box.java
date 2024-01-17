@@ -80,7 +80,7 @@ public class Box implements Runnable {
 				break;
 			}
 		}
+		System.out.println(team.getColor() + "Box tancat [" + team.getName() + "]");
 		System.out.print("\u001B[0m");
-		System.out.println("Box tancat");
 	}
 }

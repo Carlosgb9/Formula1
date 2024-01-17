@@ -36,8 +36,7 @@ public class RaceStatus {
 		result += System.lineSeparator();
 		for (Pilot p : score) {
 			if (p.getLaps() == 0) {
-				result += pos + ". " + p.getName() + " | " + timeFormat(p.getTime() * 4) + "  " + p.getTime() + "  "
-						+ p.getSleepTime() + "s";
+				result += pos + ". " + p.getName() + " | " + timeFormat(p.getTime() * 4) + "s";
 			} else {
 				result += pos + ". " + p.getName() + " | +" + p.getLaps() + " lap";
 			}
