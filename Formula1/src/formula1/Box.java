@@ -25,8 +25,8 @@ public class Box implements Runnable {
 
 	public synchronized void setPilotInBox(Pilot pilotInBox) {
 		if (pilotInBox != null) {
-			System.out.println(team.getColor() +
-					"\tBOX(" + pilotInBox.getTeam().getName() + "): " + pilotInBox.getOutput() + " is in his box");
+			System.out.println(team.getColor() + "\tBOX(" + pilotInBox.getTeam().getName() + "): "
+					+ pilotInBox.getOutput() + " is in his box");
 		}
 		this.pilotInBox = pilotInBox;
 	}
@@ -39,36 +39,36 @@ public class Box implements Runnable {
 		}
 	}
 
-	public void setPilotOut(){
+	public void setPilotOut() {
 		synchronized (this) {
 			try {
-				while (isFree()) {
+				while (isFree() && !rs.isFinished()) {
 					System.out.println("Box is free");
 					wait();
 				}
-			}
-			catch (InterruptedException e) {
+			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-
-		synchronized (pilotInBox.getName()) {
-			pilotInBox.refuel();
-			System.out
-					.println(team.getColor() + " \tBOX(" + pilotInBox.getTeam().getName() + "): " + pilotInBox.getOutput() + " refuelled");
-			pilotInBox.getName().notify();
-		}
-		synchronized (this) {
-			try {
-				while (!isFree()) {
-					wait();
+		if (!rs.isFinished()) {
+			synchronized (pilotInBox.getName()) {
+				pilotInBox.refuel();
+				System.out.println(team.getColor() + " \tBOX(" + pilotInBox.getTeam().getName() + "): "
+						+ pilotInBox.getOutput() + " refuelled");
+				pilotInBox.getName().notify();
+			}
+			synchronized (this) {
+				try {
+					while (!isFree()) {
+						wait();
+					}
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-			}catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println(team.getColor() + "El pilot ha surtit del box" + team.getName());
 			}
-			System.out.println( team.getColor() + "El pilot ha surtit del box" + team.getName());
 		}
 	}
 
@@ -80,6 +80,7 @@ public class Box implements Runnable {
 				break;
 			}
 		}
+		System.out.print("\u001B[0m");
 		System.out.println("Box tancat");
 	}
 }

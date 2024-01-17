@@ -15,10 +15,9 @@ public class RaceStatus {
 		if (pilot.getLaps() == 0) {
 			finish = true;
 		}
-		if (pilot.getFuelTank() <= 5) {
-			pilot.setOutput(pilot.getOutput() + "need refueling. Fuel=" + pilot.getFuelTank());
+		if (pilot.getFuelTank() > 5) {
+			System.out.println(pilot.getOutput());
 		}
-		System.out.println(pilot.getOutput());
 		if (isFinished()) {
 			score.add(pilot);
 		}
@@ -27,18 +26,18 @@ public class RaceStatus {
 	public synchronized boolean isFinished() {
 		return finish;
 	}
-	
 
 	@Override
 	public String toString() {
 		int pos = 1;
-		String result = "\u001B[0m";
+		String result = "";
 		ordenar();
 		result += "[RACE RESULTS]";
 		result += System.lineSeparator();
 		for (Pilot p : score) {
 			if (p.getLaps() == 0) {
-				result += pos + ". " + p.getName() + " | " + timeFormat(p.getTime()*4) + "s";
+				result += pos + ". " + p.getName() + " | " + timeFormat(p.getTime() * 4) + "  " + p.getTime() + "  "
+						+ p.getSleepTime() + "s";
 			} else {
 				result += pos + ". " + p.getName() + " | +" + p.getLaps() + " lap";
 			}

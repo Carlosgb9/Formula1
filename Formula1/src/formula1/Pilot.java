@@ -88,22 +88,23 @@ public class Pilot implements Runnable {
 	public void run() {
 		while (!rs.isFinished() && laps > 0) {
 			try {
-				output = team.getColor() + "Pilot: [" + name + "(" + team.getName() + ") laps=" + laps + "fuel=" + fuelTank + "] ";
-				sleepTime = (int) (Math.random() * 5) + 20; 
+				sleepTime = (int) (Math.random() * 5) + 20;
 				laps--;
 				time += sleepTime;
 				Thread.sleep(sleepTime);
 				fuelTank--;
-				output = team.getColor() + "Pilot: [" + name + "(" + team.getName() + ") laps=" + laps + "fuel=" + fuelTank + "] ";
+				output = team.getColor() + "Pilot: [" + name + "(" + team.getName() + ") laps=" + laps + "fuel="
+						+ fuelTank + "] ";
 				if (fuelTank <= 5) {
+					output += "need refueling. Fuel=" + fuelTank;
+					System.out.println(output);
+					output = team.getColor() + "Pilot: [" + name + "(" + team.getName() + ") laps=" + laps + "fuel="
+							+ fuelTank + "] ";
 					setPilotIn();
 				}
 				rs.lap(this);
 			} catch (InterruptedException e) {
 			}
-		}
-		synchronized (team.getBox()) {
-			team.getBox().notify();
 		}
 	}
 
@@ -121,7 +122,7 @@ public class Pilot implements Runnable {
 		}
 		if (onBox) {
 			synchronized (getName()) {
-				System.out.println("El pilot ha entrat al box" + output);
+				System.out.println(team.getColor() + "El pilot ha entrat al box :" + output);
 				while (fuelTank != MAX_TANK) {
 					getName().wait();
 				}
@@ -136,7 +137,8 @@ public class Pilot implements Runnable {
 
 	public void refuel() {
 		fuelTank = MAX_TANK;
-		output = team.getColor() + "Pilot: [" + name + "(" + team.getName() + ") laps=" + laps + "fuel=" + fuelTank + "] ";
+		output = team.getColor() + "Pilot: [" + name + "(" + team.getName() + ") laps=" + laps + "fuel=" + fuelTank
+				+ "] ";
 		try {
 			Thread.sleep(50);
 		} catch (InterruptedException e) {
