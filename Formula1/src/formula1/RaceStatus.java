@@ -6,8 +6,6 @@ import java.util.Comparator;
 import java.util.List;
 
 public class RaceStatus {
-	private static final int AMPLE_NOM = 18;
-	private static final int AMPLE_TEMPS = 15;
 	private List<Pilot> score = new ArrayList<>();
 	private boolean finish = false;
 
